@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Даянка, с Днем рождения!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gold: #FFD700;
+            --deep-purple: #6A0DAD;
+            --electric-blue: #00B4D8;
+            --neon-pink: #FF10F0;
+            --dark-space: #0F0F1A;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+            color: white;
+            background: var(--dark-space);
+            position: relative;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .universe-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 16, 240, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 180, 216, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+            animation: universePulse 8s ease-in-out infinite;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            height: 100vh;
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .screen {
+            position: absolute;
+            width: 95%;
+            max-width: 700px;
+            padding: 40px 30px;
+            background: rgba(255, 255, 255, 0.12);
+            -webkit-backdrop-filter: blur(25px);
+            backdrop-filter: blur(25px);
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease;
+            pointer-events: none;
+        }
+
+        .screen.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .cyber-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--neon-pink) 50%, var(--electric-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        .message {
+            font-size: 1.3em;
+            line-height: 1.7;
+            margin: 25px 0;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 300;
+        }
+
+        .large-message {
+            font-size: 1.6em;
+            line-height: 1.6;
+            margin: 30px 0;
+            font-weight: 300;
+            color: var(--primary-gold);
+        }
+
+        .special-message {
+            font-size: 1.4em;
+            line-height: 1.6;
+            margin: 25px 0;
+            color: var(--electric-blue);
+            font-style: italic;
+        }
+
+        .wishes-list {
+            text-align: left;
+            display: inline-block;
+            margin: 20px 0;
+        }
+
+        .wishes-list li {
+            font-size: 1.2em;
+            margin: 15px 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .photo-container {
+            width: 220px;
+            height: 220px;
+            margin: 30px auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--primary-gold);
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+            animation: photoGlow 4s ease-in-out infinite alternate;
+        }
+
+        .dayana-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .photo-container:hover .dayana-photo {
+            transform: scale(1.05);
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 1.3em;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 30px 0;
+            padding: 0 25px;
+            position: relative;
+        }
+
+        .quote::before, .quote::after {
+            content: '"';
+            font-size: 2em;
+            color: var(--primary-gold);
+            position: absolute;
+            opacity: 0.6;
+        }
+
+        .quote::before {
+            left: -5px;
+            top: -15px;
+        }
+
+        .quote::after {
+            right: -5px;
+            bottom: -25px;
+        }
+
+        .signature {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2em;
+            margin-top: 40px;
+            font-style: italic;
+            color: var(--primary-gold);
+            position: relative;
+            display: inline-block;
+        }
+
+        .signature::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
+        }
+
+        .hint {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1em;
+            z-index: 100;
+            animation: hintPulse 2s ease-in-out infinite;
+        }
+
+        .audio-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: white;
+            z-index: 1000;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .audio-control:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes universePulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes titleGlow {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(1.3); }
+        }
+
+        @keyframes photoGlow {
+            0% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.5); }
+            100% { box-shadow: 0 0 50px rgba(255, 215, 0, 0.8), 0 0 70px rgba(255, 16, 240, 0.4); }
+        }
+
+        @keyframes hintPulse {
+            0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(0.95); }
+            50% { opacity: 1; transform: translateX(-50%) scale(1); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        /* Адаптивность для iPhone */
+        @media (max-width: 768px) {
+            .cyber-title { font-size: 2.2em; }
+            .message { font-size: 1.1em; }
+            .large-message { font-size: 1.3em; }
+            .special-message { font-size: 1.2em; }
+            .screen { padding: 30px 20px; }
+            .photo-container { width: 180px; height: 180px; }
+            .signature { font-size: 1.8em; }
+            .wishes-list li { font-size: 1.1em; }
+        }
+
+        @media (max-width: 480px) {
+            .cyber-title { font-size: 1.9em; }
+            .message { font-size: 1em; }
+            .large-message { font-size: 1.2em; }
+            .special-message { font-size: 1.1em; }
+            .photo-container { width: 160px; height: 160px; }
+            .wishes-list li { font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Вселенная фон -->
+    <div class="universe-bg"></div>
+    
+    <!-- Звезды -->
+    <div class="stars" id="stars"></div>
+
+    <div class="container" id="mainContainer">
+        <!-- Начальный экран -->
+        <div class="screen active" id="screen0">
+            <h1 class="cyber-title">
+                Даянка<br>
+                с Днем рождения!
+            </h1>
+            
+            <div class="photo-container">
+                <img src="https://s1.hostingkartinok.com/uploads/images/2025/10/0addfe5e778489aea08e6197cf9b2741.jpeg" alt="Даянка" class="dayana-photo" onerror="this.style.display='none'">
+            </div>
+            
+            <p class="message">Сегодня твой особенный день — день, когда весь мир должен замереть и восхищаться тобой! ✨</p>
+            <p class="message">Коснись экрана, чтобы открыть для себя самые теплые и искренние пожелания!</p>
+        </div>
+
+        <!-- Слайд 1 -->
+        <div class="screen" id="screen1">
+            <h2 class="cyber-title">Ты — невероятна!</h2>
+            <div class="large-message">
+                💫 Уникальная и прекрасная<br>
+                🌟 Сильная и вдохновляющая
+            </div>
+            <div class="message">
+                <p>С каждым днем ты становишься только лучше, мудрее и прекраснее.</p>
+                <p>Твоя энергия заряжает всех вокруг, а улыбка может осветить даже самый хмурый день.</p>
+            </div>
+            <div class="quote">"Настоящая красота — это когда твоя душа сияет ярче любой звезды"</div>
+        </div>
+
+        <!-- Слайд 2 -->
+        <div class="screen" id="screen2">
+            <h2 class="cyber-title">Мои пожелания для тебя</h2>
+            <ul class="wishes-list">
+                <li>✨ Пусть сбываются самые смелые мечты</li>
+                <li>💝 Сердце всегда будет наполнено любовью и теплом</li>
+                <li>🚀 Жизнь станет увлекательным приключением</li>
+                <li>🌟 Удача станет твоей верной спутницей</li>
+                <li>🎯 Все цели будут достигнуты легко и gracefully</li>
+            </ul>
+            <div class="message">
+                <p>Помни: ты заслуживаешь всего самого прекрасного, что может предложить эта жизнь!</p>
+            </div>
+        </div>
+
+        <!-- Слайд 3 -->
+        <div class="screen" id="screen3">
+            <div class="large-message">
+                Помни всегда:<br>
+                ты — талантливая, умная,<br>
+                невероятно особенная!
+            </div>
+            
+            <div class="photo-container">
+                <img src="https://s1.hostingkartinok.com/uploads/images/2025/10/0addfe5e778489aea08e6197cf9b2741.jpeg" alt="Даянка" class="dayana-photo" onerror="this.style.display='none'">
+            </div>
+
+            <div class="message">
+                <p>Никогда не сомневайся в своих силах и возможностях.</p>
+                <p>Иди вперед смело, покоряй новые вершины и помни — у тебя есть все для достижения любых целей!</p>
+            </div>
+            <div class="quote">"Самая большая авантюра — это жить жизнью своей мечты, не оглядываясь на сомнения"</div>
+        </div>
+
+        <!-- Слайд 4 -->
+        <div class="screen" id="screen4">
+            <div class="special-message">
+                Пусть каждый твой день будет наполнен:<br>
+                радостными моментами,<br>
+                искренними улыбками,<br>
+                и теплом настоящей любви
+            </div>
+            <div class="message">
+                <p>Желаю тебе находить счастье в мелочах и ценить каждый момент.</p>
+                <p>Пусть твой путь будет светлым, а сердце — легким и счастливым.</p>
+            </div>
+            <div class="large-message">
+                Ты делаешь этот мир лучше<br>
+                просто тем, что ты в нем есть!
+            </div>
+        </div>
+
+        <!-- Слайд 5 - Финальный -->
+        <div class="screen" id="screen5">
+            <h1 class="cyber-title">Будь счастлива!</h1>
+            <div class="large-message">
+                Каждый день, каждую минуту,<br>
+                в каждом своем решении и выборе
+            </div>
+            <div class="message">
+                <p>Пусть жизнь дарит тебе только приятные сюрпризы, верных друзей и безграничные возможности.</p>
+                <p>Ты заслуживаешь всего самого светлого, радостного и прекрасного!</p>
+            </div>
+            <div class="quote">"Самые прекрасные вещи в жизни нельзя потрогать — их можно только почувствовать сердцем"</div>
+            <div class="signature">Саша</div>
+        </div>
+    </div>
+
+    <!-- Подсказка -->
+    <div class="hint" id="hint">Коснись экрана</div>
+
+    <!-- Кнопка управления музыкой -->
+    <button class="audio-control" onclick="toggleMusic()">🎵</button>
+
+    <!-- Аудио -->
+    <audio id="birthdayMusic" preload="auto">
+        <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-1294.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Элементы
+        const screens = document.querySelectorAll('.screen');
+        const audio = document.getElementById('birthdayMusic');
+        const mainContainer = document.getElementById('mainContainer');
+        const hint = document.getElementById('hint');
+        const starsContainer = document.getElementById('stars');
+        let currentSlide = 0;
+        let musicStarted = false;
+
+        // Создание звезд
+        function createStars() {
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.width = star.style.height = (Math.random() * 3) + 'px';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Инициализация
+        function init() {
+            createStars();
+            audio.volume = 0.5;
+            
+            // Обработчик клика по контейнеру
+            mainContainer.addEventListener('click', function(e) {
+                if (!e.target.closest('.audio-control')) {
+                    if (!musicStarted) {
+                        // Первый клик - запускаем музыку
+                        audio.play().catch(e => console.log("Автовоспроизведение заблокировано"));
+                        musicStarted = true;
+                        hint.textContent = "Коснись экрана";
+                    }
+                    nextSlide();
+                }
+            });
+
+            // Скрыть подсказку после первого клика
+            mainContainer.addEventListener('click', function() {
+                hint.style.display = 'none';
+            }, { once: true });
+
+            // Свайпы для мобильных
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            document.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+
+            document.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                
+                if (touchEndX < touchStartX - swipeThreshold) {
+                    nextSlide();
+                }
+                
+                if (touchEndX > touchStartX + swipeThreshold) {
+                    prevSlide();
+                }
+            }
+        }
+
+        // Переход к следующему слайду
+        function nextSlide() {
+            if (currentSlide < screens.length - 1) {
+                changeSlide(currentSlide + 1);
+            } else {
+                // Если последний слайд - перезапускаем
+                changeSlide(0);
+            }
+        }
+
+        // Переход к предыдущему слайду
+        function prevSlide() {
+            if (currentSlide > 0) {
+                changeSlide(currentSlide - 1);
+            }
+        }
+
+        // Смена слайда
+        function changeSlide(newSlide) {
+            // Скрываем текущий слайд
+            screens[currentSlide].classList.remove('active');
+            
+            // Показываем новый слайд
+            currentSlide = newSlide;
+            screens[currentSlide].classList.add('active');
+            
+            // Анимируем элементы слайда
+            animateSlideElements();
+        }
+
+        // Анимация элементов слайда
+        function animateSlideElements() {
+            const currentScreen = screens[currentSlide];
+            const elements = currentScreen.querySelectorAll('.message, .large-message, .special-message, .quote, .wishes-list, .photo-container');
+            
+            elements.forEach((element, index) => {
+                element.classList.remove('fade-in');
+                setTimeout(() => {
+                    element.classList.add('fade-in');
+                }, index * 300);
+            });
+        }
+
+        // Управление музыкой
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
+
+        // Инициализация при загрузке
+        window.addEventListener('load', init);
+        
+        // Обработчик ошибки загрузки фото
+        window.addEventListener('error', function(e) {
+            if (e.target.tagName === 'IMG') {
+                e.target.style.display = 'none';
+            }
+        }, true);
+    </script>
+</body>
+</html>
