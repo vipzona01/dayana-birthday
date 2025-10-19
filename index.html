@@ -10,6 +10,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         :root {
@@ -27,8 +28,6 @@
             color: white;
             background: var(--dark-space);
             position: relative;
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
         }
 
@@ -227,43 +226,28 @@
             animation: hintPulse 2s ease-in-out infinite;
         }
 
-        .audio-control {
-            position: fixed;
-            top: 20px;
-            right: 20px;
+        .nav-button {
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 12px;
-            border-radius: 50%;
-            cursor: pointer;
-            color: white;
-            z-index: 1000;
-            font-size: 1.1em;
-            transition: all 0.3s ease;
-        }
-
-        .audio-control:hover {
-            transform: scale(1.1);
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .start-button {
-            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--neon-pink) 50%, var(--electric-blue) 100%);
-            border: none;
-            padding: 15px 40px;
+            padding: 15px 25px;
             border-radius: 50px;
-            color: white;
-            font-size: 1.2em;
-            font-weight: 500;
             cursor: pointer;
-            margin-top: 20px;
+            color: white;
+            font-size: 1em;
+            margin: 10px;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
-        .start-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
         }
 
         @keyframes universePulse {
@@ -325,6 +309,7 @@
             .special-message { font-size: 1.1em; }
             .photo-container { width: 160px; height: 160px; }
             .wishes-list li { font-size: 1em; }
+            .nav-button { padding: 12px 20px; font-size: 0.9em; }
         }
     </style>
 </head>
@@ -348,8 +333,11 @@
             </div>
             
             <p class="message">Сегодня твой особенный день — день, когда весь мир должен замереть и восхищаться тобой! ✨</p>
-            <p class="message">Нажми кнопку ниже, чтобы начать просмотр пожеланий!</p>
-            <button class="start-button" id="startButton">Начать просмотр</button>
+            <p class="message">Коснись экрана или используй кнопки для навигации</p>
+            
+            <div class="nav-buttons">
+                <button class="nav-button" onclick="nextSlide()">Далее →</button>
+            </div>
         </div>
 
         <!-- Слайд 1 -->
@@ -364,6 +352,11 @@
                 <p>Твоя энергия заряжает всех вокруг, а улыбка может осветить даже самый хмурый день.</p>
             </div>
             <div class="quote">"Настоящая красота — это когда твоя душа сияет ярче любой звезды"</div>
+            
+            <div class="nav-buttons">
+                <button class="nav-button" onclick="prevSlide()">← Назад</button>
+                <button class="nav-button" onclick="nextSlide()">Далее →</button>
+            </div>
         </div>
 
         <!-- Слайд 2 -->
@@ -378,6 +371,11 @@
             </ul>
             <div class="message">
                 <p>Помни: ты заслуживаешь всего самого прекрасного, что может предложить эта жизнь!</p>
+            </div>
+            
+            <div class="nav-buttons">
+                <button class="nav-button" onclick="prevSlide()">← Назад</button>
+                <button class="nav-button" onclick="nextSlide()">Далее →</button>
             </div>
         </div>
 
@@ -398,6 +396,11 @@
                 <p>Иди вперед смело, покоряй новые вершины и помни — у тебя есть все для достижения любых целей!</p>
             </div>
             <div class="quote">"Самая большая авантюра — это жить жизнью своей мечты, не оглядываясь на сомнения"</div>
+            
+            <div class="nav-buttons">
+                <button class="nav-button" onclick="prevSlide()">← Назад</button>
+                <button class="nav-button" onclick="nextSlide()">Далее →</button>
+            </div>
         </div>
 
         <!-- Слайд 4 -->
@@ -416,6 +419,11 @@
                 Ты делаешь этот мир лучше<br>
                 просто тем, что ты в нем есть!
             </div>
+            
+            <div class="nav-buttons">
+                <button class="nav-button" onclick="prevSlide()">← Назад</button>
+                <button class="nav-button" onclick="nextSlide()">Далее →</button>
+            </div>
         </div>
 
         <!-- Слайд 5 - Финальный -->
@@ -431,31 +439,24 @@
             </div>
             <div class="quote">"Самые прекрасные вещи в жизни нельзя потрогать — их можно только почувствовать сердцем"</div>
             <div class="signature">Саша</div>
+            
+            <div class="nav-buttons">
+                <button class="nav-button" onclick="prevSlide()">← Назад</button>
+                <button class="nav-button" onclick="changeSlide(0)">В начало</button>
+            </div>
         </div>
     </div>
 
     <!-- Подсказка -->
     <div class="hint" id="hint">Коснись экрана для перехода</div>
 
-    <!-- Кнопка управления музыкой -->
-    <button class="audio-control" onclick="toggleMusic()">🎵</button>
-
-    <!-- Аудио -->
-    <audio id="birthdayMusic" loop>
-        <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-1294.mp3" type="audio/mpeg">
-    </audio>
-
     <script>
         // Элементы
         const screens = document.querySelectorAll('.screen');
-        const audio = document.getElementById('birthdayMusic');
         const mainContainer = document.getElementById('mainContainer');
         const hint = document.getElementById('hint');
         const starsContainer = document.getElementById('stars');
-        const startButton = document.getElementById('startButton');
         let currentSlide = 0;
-        let musicStarted = false;
-        let isInitialized = false;
 
         // Создание звезд
         function createStars() {
@@ -473,26 +474,13 @@
 
         // Инициализация
         function init() {
-            if (isInitialized) return;
-            
             createStars();
-            audio.volume = 0.5;
             
             // Обработчик клика по контейнеру
             mainContainer.addEventListener('click', function(e) {
-                if (!e.target.closest('.audio-control') && !e.target.closest('.start-button')) {
+                if (!e.target.closest('.nav-button')) {
                     nextSlide();
                 }
-            });
-
-            // Обработчик для кнопки старта
-            startButton.addEventListener('click', function() {
-                if (!musicStarted) {
-                    // Запускаем музыку при первом взаимодействии
-                    audio.play().catch(e => console.log("Автовоспроизведение заблокировано"));
-                    musicStarted = true;
-                }
-                nextSlide();
             });
 
             // Скрыть подсказку после первого клика
@@ -524,17 +512,12 @@
                     prevSlide();
                 }
             }
-            
-            isInitialized = true;
         }
 
         // Переход к следующему слайду
         function nextSlide() {
             if (currentSlide < screens.length - 1) {
                 changeSlide(currentSlide + 1);
-            } else {
-                // Если последний слайд - перезапускаем
-                changeSlide(0);
             }
         }
 
@@ -569,15 +552,6 @@
                     element.classList.add('fade-in');
                 }, index * 300);
             });
-        }
-
-        // Управление музыкой
-        function toggleMusic() {
-            if (audio.paused) {
-                audio.play();
-            } else {
-                audio.pause();
-            }
         }
 
         // Инициализация при загрузке
