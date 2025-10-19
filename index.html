@@ -29,6 +29,7 @@
             position: relative;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .universe-bg {
@@ -246,6 +247,25 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
+        .start-button {
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--neon-pink) 50%, var(--electric-blue) 100%);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
         @keyframes universePulse {
             0%, 100% { opacity: 0.7; }
             50% { opacity: 1; }
@@ -328,7 +348,8 @@
             </div>
             
             <p class="message">Сегодня твой особенный день — день, когда весь мир должен замереть и восхищаться тобой! ✨</p>
-            <p class="message">Коснись экрана, чтобы открыть для себя самые теплые и искренние пожелания!</p>
+            <p class="message">Нажми кнопку ниже, чтобы начать просмотр пожеланий!</p>
+            <button class="start-button" id="startButton">Начать просмотр</button>
         </div>
 
         <!-- Слайд 1 -->
@@ -414,7 +435,15 @@
     </div>
 
     <!-- Подсказка -->
-    <div class="hint" id="hint">Коснись экрана</div>
+    <div class="hint" id="hint">Коснись экрана для перехода</div>
+
+    <!-- Кнопка управления музыкой -->
+    <button class="audio-control" onclick="toggleMusic()">🎵</button>
+
+    <!-- Аудио -->
+    <audio id="birthdayMusic" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-1294.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
         // Элементы
@@ -423,8 +452,10 @@
         const mainContainer = document.getElementById('mainContainer');
         const hint = document.getElementById('hint');
         const starsContainer = document.getElementById('stars');
+        const startButton = document.getElementById('startButton');
         let currentSlide = 0;
         let musicStarted = false;
+        let isInitialized = false;
 
         // Создание звезд
         function createStars() {
@@ -442,20 +473,26 @@
 
         // Инициализация
         function init() {
+            if (isInitialized) return;
+            
             createStars();
             audio.volume = 0.5;
             
             // Обработчик клика по контейнеру
             mainContainer.addEventListener('click', function(e) {
-                if (!e.target.closest('.audio-control')) {
-                    if (!musicStarted) {
-                        // Первый клик - запускаем музыку
-                        audio.play().catch(e => console.log("Автовоспроизведение заблокировано"));
-                        musicStarted = true;
-                        hint.textContent = "Коснись экрана";
-                    }
+                if (!e.target.closest('.audio-control') && !e.target.closest('.start-button')) {
                     nextSlide();
                 }
+            });
+
+            // Обработчик для кнопки старта
+            startButton.addEventListener('click', function() {
+                if (!musicStarted) {
+                    // Запускаем музыку при первом взаимодействии
+                    audio.play().catch(e => console.log("Автовоспроизведение заблокировано"));
+                    musicStarted = true;
+                }
+                nextSlide();
             });
 
             // Скрыть подсказку после первого клика
@@ -487,6 +524,8 @@
                     prevSlide();
                 }
             }
+            
+            isInitialized = true;
         }
 
         // Переход к следующему слайду
